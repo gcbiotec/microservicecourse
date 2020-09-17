@@ -32,7 +32,7 @@ public class CachorroControllerTest {
 
     @Test
     public void retornaByIdShouldReturnOk() throws Exception {
-        Cachorro cachorro = new Cachorro("Biscoito", 2);
+        Cachorro cachorro = new Cachorro(null, "Biscoito", 2, null, 0);
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(cachorro);
 
