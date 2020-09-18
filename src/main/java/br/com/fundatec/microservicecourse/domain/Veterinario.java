@@ -32,7 +32,7 @@ public class Veterinario implements Serializable{
     
         
     @OneToMany(
-            mappedBy = "meuVeterinario",
+            mappedBy = "veterinario",
             targetEntity = Cachorro.class,
             fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST

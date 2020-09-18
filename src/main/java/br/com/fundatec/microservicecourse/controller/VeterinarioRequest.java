@@ -2,16 +2,16 @@ package br.com.fundatec.microservicecourse.controller;
 
 public class VeterinarioRequest {
 	
-	private Long id;
+	private Long veterinarioId;
 
-	
-	public Long getId() {
-		return id;
+	public Long getVeterinarioId() {
+		return veterinarioId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setVeterinarioId(Long veterinarioId) {
+		this.veterinarioId = veterinarioId;
 	}
-	
+
+		
 
 }

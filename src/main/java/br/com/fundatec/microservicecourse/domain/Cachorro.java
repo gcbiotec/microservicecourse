@@ -18,7 +18,7 @@ public class Cachorro {
     @Column(name = "idade")
     private int idade;
     
-    @Column(name = "Raça")
+    @Column(name = "raca")
     private String raca;
     
     @Column(name = "peso")
@@ -28,22 +28,9 @@ public class Cachorro {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "veterinario_id")
-    private Veterinario meuVeterinario;
+    private Veterinario veterinario;
     
-    public Veterinario getMeuVeterinario() {
-		return meuVeterinario;
-	}
-
-	public void setMeuVeterinario(Veterinario meuVeterinario) {
-		this.meuVeterinario = meuVeterinario;
-	}
-
-	public Cachorro(Veterinario meuVeterinario) {
-		super();
-		this.meuVeterinario = meuVeterinario;
-	}
-
-	public Cachorro() {}
+    public Cachorro() {}
     
     public Cachorro(Long id, String nome, int idade, String raca, int peso) {
 		super();
@@ -51,22 +38,6 @@ public class Cachorro {
 		this.nome = nome;
 		this.idade = idade;
 		this.raca = raca;
-		this.peso = peso;
-	}
-
-	public String getRaca() {
-		return raca;
-	}
-
-	public void setRaca(String raca) {
-		this.raca = raca;
-	}
-
-	public int getPeso() {
-		return peso;
-	}
-
-	public void setPeso(int peso) {
 		this.peso = peso;
 	}
 
@@ -93,5 +64,32 @@ public class Cachorro {
 	public void setIdade(int idade) {
 		this.idade = idade;
 	}
+
+	public String getRaca() {
+		return raca;
+	}
+
+	public void setRaca(String raca) {
+		this.raca = raca;
+	}
+
+	public int getPeso() {
+		return peso;
+	}
+
+	public void setPeso(int peso) {
+		this.peso = peso;
+	}
+
+	public Veterinario getVeterinario() {
+		return veterinario;
+	}
+
+	public void setVeterinario(Veterinario veterinario) {
+		this.veterinario = veterinario;
+	}
+
+    
+    
 	
   }

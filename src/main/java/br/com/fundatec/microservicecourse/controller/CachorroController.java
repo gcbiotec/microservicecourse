@@ -21,87 +21,89 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/cachorros")
 public class CachorroController {
 
-    @Autowired
-    private CachorroRepository cachorroRepository;
+	@Autowired
+	private CachorroRepository cachorroRepository;
+	@Autowired
 	private VeterinarioRepository veterinarioRepository;
-	private VeterinarioRequest veterinarioRequest;
+	// private String nome = "gabriel";
+	// private String nome2 = new String("gabriel");
 
+	@GetMapping("{id}")
+	public ResponseEntity<Cachorro> retornaCachorro(@PathVariable("id") Long id) {
+		Optional<Cachorro> resultado = cachorroRepository.findById(id);
 
-    @GetMapping("{id}")
-    public ResponseEntity<Cachorro> retornaCachorro(@PathVariable("id") Long id) {
-        Optional<Cachorro> resultado = cachorroRepository.findById(id);
+		if (resultado.isPresent()) {
+			return new ResponseEntity<Cachorro>(resultado.get(), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Cachorro>(HttpStatus.NO_CONTENT);
+		}
+	}
 
-        if(resultado.isPresent()) {
-            return new ResponseEntity<Cachorro>(resultado.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<Cachorro>(HttpStatus.NO_CONTENT);
-        }
-    }
+	@GetMapping
+	public ResponseEntity<List<Cachorro>> findAllByNome(@RequestParam(value = "nome", required = false) String nome) {
+		List<Cachorro> resultado;
 
-    @GetMapping
-    public ResponseEntity<List<Cachorro>> findAllByNome(@RequestParam(value = "nome", required = false) String nome) {
-        List<Cachorro> resultado;
+		// validar nome
+		if (nome != null) {
+			Optional<Cachorro> cachorro = cachorroRepository.findByNome(nome);
 
-        //validar nome
-        if (nome != null) {
-            Optional<Cachorro> cachorro = cachorroRepository.findByNome(nome);
+			if (cachorro.isPresent()) {
+				resultado = Collections.singletonList(cachorro.get());
+			} else {
+				resultado = Collections.emptyList();
+			}
+		} else {
+			resultado = cachorroRepository.findAll();
+		}
 
-            if(cachorro.isPresent()) {
-                resultado = Collections.singletonList(cachorro.get());
-            } else {
-                resultado = Collections.emptyList();
-            }
-        } else {
-            resultado = cachorroRepository.findAll();
-        }
+		return new ResponseEntity(resultado, HttpStatus.OK);
+	}
 
-        return new ResponseEntity(resultado, HttpStatus.OK);
-    }
+	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity salvaCachorro(@RequestBody Cachorro cachorro) {
+		cachorroRepository.save(cachorro);
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity salvaCachorro(@RequestBody Cachorro cachorro) {
-        cachorroRepository.save(cachorro);
+		return ResponseEntity.ok().build();
+	}
 
-        return ResponseEntity.ok().build();
-    }
-    
-    @PatchMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity adicionaVeterinario
-    (@PathVariable Long id, @RequestBody VeterinarioRequest veterinarioRequest) {
-      Optional <Cachorro> cachorroFromDB = cachorroRepository.findById(id);
-    	if (cachorroFromDB.isPresent()) {
-    		
-    		Cachorro cachorro = cachorroFromDB.get();
+	@PatchMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity adicionaVeterinario(@PathVariable Long id,
+			@RequestBody VeterinarioRequest veterinarioRequest) {
+		Optional<Cachorro> cachorroFromDB = cachorroRepository.findById(id);
+		if (cachorroFromDB.isPresent()) {
 
-       Optional<Veterinario> veterinarioFromDB = veterinarioRepository.findById(veterinarioRequest.getId());
+			Cachorro cachorro = cachorroFromDB.get();
 
-    	if (veterinarioFromDB.isPresent()) {
-    			
-    		Veterinario veterinario = veterinarioFromDB.get();
-    		
-			cachorro.setMeuVeterinario(veterinario);
-			
-			cachorroRepository.save(cachorro);
+			Optional<Veterinario> veterinarioFromDB = veterinarioRepository
+					.findById(veterinarioRequest.getVeterinarioId());
 
-	    	return new ResponseEntity(HttpStatus.OK);
-    		}
-    	}
-    		return new ResponseEntity(HttpStatus.BAD_REQUEST);
-    }    
-    
-    @DeleteMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity deleteCachorroById(@PathVariable Long id) {
-        Optional <Cachorro> cachorroFromDB = cachorroRepository.findById(id);
-        
-        if (cachorroFromDB.isPresent()) {
-    		Cachorro cachorro = cachorroFromDB.get();
+			if (veterinarioFromDB.isPresent()) {
+
+				Veterinario veterinario = veterinarioFromDB.get();
+
+				cachorro.setVeterinario(veterinario);
+
+				cachorroRepository.save(cachorro);
+
+				return new ResponseEntity(HttpStatus.OK);
+			}
+		}
+		return new ResponseEntity(HttpStatus.BAD_REQUEST);
+	}
+
+	@DeleteMapping(value = "{id}")
+	public ResponseEntity deleteCachorroById(@PathVariable Long id) {
+		Optional<Cachorro> cachorroFromDB = cachorroRepository.findById(id);
+
+		if (cachorroFromDB.isPresent()) {
+			Cachorro cachorro = cachorroFromDB.get();
 
 			cachorroRepository.delete(cachorro);
-    		
-            return new ResponseEntity(HttpStatus.OK);
-         
-        } else {
-    		return new ResponseEntity(HttpStatus.BAD_REQUEST);
-       }
-    }
+
+			return new ResponseEntity(HttpStatus.OK);
+
+		} else {
+			return new ResponseEntity(HttpStatus.BAD_REQUEST);
+		}
+	}
 }
