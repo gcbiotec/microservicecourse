@@ -27,7 +27,7 @@ public class Veterinario implements Serializable{
     @Column(name = "dataNascimento")
     private String dataNascimento;
     
-    @Column(name = "cpf")
+    @Column(name = "cpf", unique = true)
     private String cpf;
     
         

@@ -3,6 +3,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import br.com.fundatec.microservicecourse.domain.Cachorro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,6 +34,16 @@ public class VeterinarioController {
             return new ResponseEntity<Veterinario>(resultado.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<Veterinario>(HttpStatus.NO_CONTENT);
+        }
+    }
+    @GetMapping("/{id}/cachorros")
+    public ResponseEntity<List<Cachorro>> findAllCachorros(@PathVariable("id") Long id){
+	    List<Cachorro> resultado = veterinarioRepository.findAllCachorros(id);
+
+	    if(resultado.isEmpty()){
+	        return ResponseEntity.noContent().build();
+        }else{
+	        return ResponseEntity.ok(resultado);
         }
     }
 	
